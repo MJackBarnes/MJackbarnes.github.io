@@ -33,7 +33,8 @@ function getTrainingData(){
 function makeTrainedNet(){
 	var net = new brain.NeuralNetwork();
   net.train(tImages);
-  trainedNet = net;
+  trainedNet = net.toFunction();
+  console.log("Trained");
 }
 
 function drawSave(save){
