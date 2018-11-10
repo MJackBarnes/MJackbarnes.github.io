@@ -1,0 +1,21 @@
+body {
+ 	background-color: rgb(40, 40, 40);
+}
+#title {
+ 	text-align: center;
+	color: rgb(100, 100, 100);
+}
+#instructions{
+  	text-align: center;
+	color: rgb(100, 100, 100);
+  	font-size: 18px;
+}
+#guess{
+	text-align: center;
+	color: rgb(100, 100, 100);
+	font-size: 36px;
+}
+.center {
+  display: block;
+  margin: auto;
+}

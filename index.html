@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  <title>A Pen by  MJackBarnes</title>
+  
+  
+  
+      <link rel="stylesheet" href="css/style.css">
+
+  
+</head>
+
+<body>
+
+  <!DOCTYPE html>
+<html>
+  <head>
+    <link rel="styleseet" href="style.css">
+    <meta charset="utf-8" />
+
+  </head>
+  <body>
+    <h1 id="title">AI Example</h1>
+	<h2 id="guess">Your number will be here</h2>
+    <p id="instructions">Instructions:<br> c = clear screen<br> t = save as training data <br> s = push training data to server</p>
+  </body>
+</html>
+	<script src="https://www.gstatic.com/firebasejs/5.5.7/firebase.js"></script>
+	<script>
+	  // Initialize Firebase
+	  var config = {
+		apiKey: "AIzaSyDaJj0RHuAFY8jnuHO1ETClSx_P2i2-jYE",
+		authDomain: "ai-example-aa3a1.firebaseapp.com",
+		databaseURL: "https://ai-example-aa3a1.firebaseio.com",
+		projectId: "ai-example-aa3a1",
+		storageBucket: "ai-example-aa3a1.appspot.com",
+		messagingSenderId: "333834156229"
+	  };
+	  firebase.initializeApp(config);
+	</script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.2/p5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.2/addons/p5.dom.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.2/addons/p5.sound.min.js"></script>
+    <script  src="js/index.js"></script>
+	<script  src="js/brain.js"></script>
+	<script  src="js/objects.js"></script>
+	<script  src="js/io.js"></script>
+</body>
+
+</html>
