@@ -39,6 +39,10 @@ function makeTrainedNet(){
     return net;
 }
 
+function stringifyTImages() {
+    return JSON.stringify(tImages);
+}
+
 function c(r, g, b) {
     this.r = r;
     this.g = g;
