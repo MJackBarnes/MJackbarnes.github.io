@@ -1,3 +1,5 @@
+
+//Makes the neural network object
 async function makeNet(){
     const model = tf.sequential();
     model.add(tf.layers.conv2d({
@@ -16,11 +18,13 @@ async function makeNet(){
     net = model;
 }
 
+//prepares data for use in the trainig of network net
 async function prepareData(){
     testData = toDataFormat(Array.from(testData));
     trainData = toDataFormat(Array.from(tData));
 }
 
+// data storage object
 function Data(){
     this.xs = [];
     this.labels = [];
@@ -32,7 +36,7 @@ async function toDataFormat(data){
         d.xs[d.xs.length] = toTensor(data[i].input);
         d.labels[d.labels.length] = data[i].output;
     }
-    d.xs = tf.tensor(d.xs);
+    d.xs = tf.tensor(d.xs, [d.xs.length, 1]);
     return d;
 }
 
