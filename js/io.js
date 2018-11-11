@@ -8,6 +8,9 @@ function keyPressed(){
 	if(key === 's'){
 		saves();
 	}
+	if(key === 'g'){
+		gets();
+	}
 }
 
 function mousePressed(){

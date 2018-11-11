@@ -9,15 +9,19 @@ var tImages = [];
 var database = firebase.database();
 const resolution = 28;
 const shape = [resolution, resolution];
-const a = tf.tensor()
-const testImages;
+var tData;
+var dataRef = database.ref("tData/-LR3Zig5Zzz7S_WNUvOv");
+var logEnabled = true;
+var net;
+var trainData;
+var testData;
 
 function setup(){
   canvas = createCanvas(600, 600);
   canvas.class('center');
   background(51);
   unit = width/resolution;
-  console.log("Unit is: " + unit);
+  dLog("Unit is: " + unit);
   for(var i = 0; i < resolution; i ++){
     pixels[i] = [];
   }
@@ -26,66 +30,7 @@ function setup(){
       pixels[i][j] = new Pixel(i, j);
     }
   }
-}
-
-function makeNet(){
-  const model = tf.sequential();
-  model.add(tf.layers.conv2d({
-    inputShape: [resolution, resolution, 1],
-    kernelSize: 3,
-    filters: 16,
-    activation: 'relu'
-  }));
-  model.add(tf.layers.maxPooling2d({poolSize: 2, strides: 2}));
-  model.add(tf.layers.conv2d({kernelSize: 3, filters: 32, activation: 'relu'}));
-  model.add(tf.layers.maxPooling2d({poolSize: 2, strides: 2}));
-  model.add(tf.layers.conv2d({kernelSize: 3, filters: 32, activation: 'relu'}));
-  model.add(tf.layers.flatten({}));
-  model.add(tf.layers.dense({units: 64, activation: 'relu'}));
-  model.add(tf.layers.dense({units: 10, activation: 'softmax'}));
-  return model;
-}
-
-function trainNet(model, onIteration){
-  const LEARNING_RATE = 0.01;
-  const optimizer = 'rmsprop';
-  model.compile({
-    optimizer,
-    loss: 'categoricalCrossentropy',
-    metrics: ['accuracy'],
-  });
-  const batchSize = 320;
-  const validationSplit = 0.15;
-  let trainBatchCount = 0;
-  const trainData = toDataFormat(tImages);
-  const testData = toDataFormat(testImages);
-  const trainEpochs = 10
-  const totalNumBatches = Math.ceil((resolution ^ 2) * (1 - validationSplit) / batchSize) * trainEpochs;
-  let valAcc;
-  await model.fit(trainData.xs, trainData.labels, {
-    batchSize,
-    validationSplit,
-    epochs: trainEpochs,
-    callbacks: {
-      onBatchEnd: async (batch, logs) => {
-        trainBatchCount++;
-        if (onIteration && batch % 10 === 0) {
-          onIteration('onBatchEnd', batch, logs);
-        }
-        await tf.nextFrame();
-      },
-      onEpochEnd: async (epoch, logs) => {
-        valAcc = logs.val_acc;
-        if (onIteration) {
-          onIteration('onEpochEnd', epoch, logs);
-        }
-        await tf.nextFrame();
-      }
-    }
-  });
-  const testResult = model.evaluate(testData.xs, testData.labels);
-  const testAccPercent = testResult[1].dataSync()[0] * 100;
-  const finalValAccPercent = valAcc * 100;
+  makeNet();
 }
 
 function drawSave(save){
@@ -118,16 +63,31 @@ function clears(){
 function trains(){
 	img = new Image(cPixels);
 	img.prep();
-	console.log(JSON.stringify(img));
+	dLog(JSON.stringify(img));
 	tImg = new TrainingImage(img, prompt("What number is this"));
 	tImages[tImages.length] = tImg;
 	clears();
 }
+
+function setTData(data){
+  tData = data;
+  for(var i = 0; i < tData.length; i ++){
+    tData[i].output = parseInt(tData[i].output, 10);
+  }
+  tData = Array.from(tData);
+  dLog(tData);
+}
+
 function saves(){
-	for(var i = 0; i < tImages.length; i++){
-		database.ref("Training").push(JSON.stringify(tImages[i]));
-	}
-	alert("Sent Training Data");
+  gets();
+  tData = [tData[0]].concat(tImages, tData);
+  database.ref("tData/-LR3Zig5Zzz7S_WNUvOv").set(tData);
+  dLog(tData);
+}
+
+function gets(){
+  database.ref("tData/-LR3Zig5Zzz7S_WNUvOv").once('value').then(function(snapshot){setTData(snapshot.val())});
+  dLog(tData);
 }
 
 function drawGrid(){

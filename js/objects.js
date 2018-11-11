@@ -32,3 +32,9 @@ function TrainingImage(image, num){
 	this.input = image.p;
 	this.output = num;
 }
+
+function toUndefinedObject(obj){
+	var temp = JSON.stringify(obj);
+	temp = JSON.parse(temp)
+	return temp;
+}
