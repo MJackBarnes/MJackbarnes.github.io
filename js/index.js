@@ -33,13 +33,13 @@ function getTrainingData(){
 
 function makeTrainedNet(){
 	net = new brain.NeuralNetwork();
-    net.train([new t(new color(1, 0, 0), 0), new t(new color(0, 1, 0), 0.5), new t(new color(0, 0, 1), 1), new t(new color(1, 0, 0), 0), new t(new color(0, 1, 0), 0.5), new t(new color(0, 0, 1), 1), new t(new color(1, 0, 0), 0), new t(new color(0, 1, 0), 0.5), new t(new color(0, 0, 1), 1)]);
+    net.train([new t(new c(1, 0, 0), 0), new t(new c(0, 1, 0), 0.5), new t(new c(0, 0, 1), 1), new t(new c(1, 0, 0), 0), new t(new c(0, 1, 0), 0.5), new t(new c(0, 0, 1), 1), new t(new c(1, 0, 0), 0), new t(new c(0, 1, 0), 0.5), new t(new c(0, 0, 1), 1)]);
   trainedNet = net.toFunction();
     console.log("Trained");
     return net;
 }
 
-function color(r, g, b) {
+function c(r, g, b) {
     this.r = r;
     this.g = g;
     this.b = b;
