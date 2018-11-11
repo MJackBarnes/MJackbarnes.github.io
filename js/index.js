@@ -8,6 +8,9 @@ var guess = document.getElementById("guess");
 var tImages = [];
 var database = firebase.database();
 const resolution = 28;
+const shape = [resolution, resolution];
+const a = tf.tensor()
+const testImages;
 
 function setup(){
   canvas = createCanvas(600, 600);
@@ -25,15 +28,64 @@ function setup(){
   }
 }
 
-function c(r, g, b) {
-    this.r = r;
-    this.g = g;
-    this.b = b;
+function makeNet(){
+  const model = tf.sequential();
+  model.add(tf.layers.conv2d({
+    inputShape: [resolution, resolution, 1],
+    kernelSize: 3,
+    filters: 16,
+    activation: 'relu'
+  }));
+  model.add(tf.layers.maxPooling2d({poolSize: 2, strides: 2}));
+  model.add(tf.layers.conv2d({kernelSize: 3, filters: 32, activation: 'relu'}));
+  model.add(tf.layers.maxPooling2d({poolSize: 2, strides: 2}));
+  model.add(tf.layers.conv2d({kernelSize: 3, filters: 32, activation: 'relu'}));
+  model.add(tf.layers.flatten({}));
+  model.add(tf.layers.dense({units: 64, activation: 'relu'}));
+  model.add(tf.layers.dense({units: 10, activation: 'softmax'}));
+  return model;
 }
 
-function t(inp, out) {
-    this.input = inp;
-    this.output = out;
+function trainNet(model, onIteration){
+  const LEARNING_RATE = 0.01;
+  const optimizer = 'rmsprop';
+  model.compile({
+    optimizer,
+    loss: 'categoricalCrossentropy',
+    metrics: ['accuracy'],
+  });
+  const batchSize = 320;
+  const validationSplit = 0.15;
+  let trainBatchCount = 0;
+  const trainData = toDataFormat(tImages);
+  const testData = toDataFormat(testImages);
+  const trainEpochs = 10
+  const totalNumBatches = Math.ceil((resolution ^ 2) * (1 - validationSplit) / batchSize) * trainEpochs;
+  let valAcc;
+  await model.fit(trainData.xs, trainData.labels, {
+    batchSize,
+    validationSplit,
+    epochs: trainEpochs,
+    callbacks: {
+      onBatchEnd: async (batch, logs) => {
+        trainBatchCount++;
+        if (onIteration && batch % 10 === 0) {
+          onIteration('onBatchEnd', batch, logs);
+        }
+        await tf.nextFrame();
+      },
+      onEpochEnd: async (epoch, logs) => {
+        valAcc = logs.val_acc;
+        if (onIteration) {
+          onIteration('onEpochEnd', epoch, logs);
+        }
+        await tf.nextFrame();
+      }
+    }
+  });
+  const testResult = model.evaluate(testData.xs, testData.labels);
+  const testAccPercent = testResult[1].dataSync()[0] * 100;
+  const finalValAccPercent = valAcc * 100;
 }
 
 function drawSave(save){
