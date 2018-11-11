@@ -32,9 +32,15 @@ function getTrainingData(){
 
 function makeTrainedNet(){
 	var net = new brain.NeuralNetwork();
-    net.train([new t("red", 0), new t("green", 0.5), new t("blue", 1)]);
+    net.train([new t(new color(1, 0, 0), 0), new t(new color(0, 1, 0), 0.5), new t(new color(0, 0, 1), 1)]);
   trainedNet = net.toFunction();
   console.log("Trained");
+}
+
+function color(r, g, b) {
+    this.r = r;
+    this.g = g;
+    this.b = b;
 }
 
 function t(inp, out) {
