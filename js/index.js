@@ -10,11 +10,11 @@ var database = firebase.database();
 const resolution = 28;
 const shape = [resolution, resolution];
 var tData;
-var dataRef = database.ref("tData/-LR3Zig5Zzz7S_WNUvOv");
-var logEnabled = true;
+var logEnabled = false;
 var net;
 var trainData;
 var testData;
+console.log("To build a neural net type the command newNet() into this console");
 
 function setup(){
   canvas = createCanvas(600, 600);
@@ -30,7 +30,11 @@ function setup(){
       pixels[i][j] = new Pixel(i, j);
     }
   }
+}
+
+function newNet(){
   makeNet();
+  trainNet(net);
 }
 
 function drawSave(save){
@@ -81,13 +85,27 @@ function setTData(data){
 function saves(){
   gets();
   tData = [tData[0]].concat(tImages, tData);
-  database.ref("tData/-LR3Zig5Zzz7S_WNUvOv").set(tData);
+  database.ref("TrainingData").set(tData);
   dLog(tData);
 }
 
 function gets(){
-  database.ref("tData/-LR3Zig5Zzz7S_WNUvOv").once('value').then(function(snapshot){setTData(snapshot.val())});
+  database.ref("TrainingData").once('value').then(function(snapshot){setTData(snapshot.val())});
+  database.ref("TestData").once('value').then(function(snapshot){setTestData(snapshot.val())});
   dLog(tData);
+}
+
+function setTestData(data){
+  testData = data;
+  for(var i = 0; i < testData.length; i ++){
+    testData[i].output = parseInt(testData[i].output, 10);
+  }
+  testData = Array.from(testData);
+  dLog(testData);
+}
+
+function saveAsTestData(){
+  database.ref("TestData").set(tImages);
 }
 
 function drawGrid(){

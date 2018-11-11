@@ -18,20 +18,30 @@ function makeNet(){
 
 function prepareData(){
     gets();
-    testData = toDataFormat(testImages);
-    trainData = toDataFormat(tData);
+    testData = toDataFormat(Array.from(testData));
+    trainData = toDataFormat(Array.from(tData));
+}
+
+function Data(){
+    this.xs = [];
+    this.labels = [];
 }
 
 function toDataFormat(data){
-    this.xs = [];
-    this.labels = []
+    var d = new Data();
     for(var i = 0; i < data.length; i ++){
-        this.xs[this.xs.length] = data[i].input;
-        this.labels[this.labels.length] = data[i].output;
+        d.xs[d.xs.length] = toTensor(data[i].input);
+        d.labels[d.labels.length] = data[i].output;
     }
+    return d;
+}
+
+function toTensor(data){
+    return tf.tensor(data);
 }
   
-async function trainNet(model, onIteration){
+async function trainNet(model){
+    prepareData();
     const LEARNING_RATE = 0.01;
     const optimizer = 'rmsprop';
     model.compile({
@@ -52,16 +62,10 @@ async function trainNet(model, onIteration){
         callbacks: {
         onBatchEnd: async (batch, logs) => {
             trainBatchCount++;
-            if (onIteration && batch % 10 === 0) {
-            onIteration('onBatchEnd', batch, logs);
-            }
             await tf.nextFrame();
         },
         onEpochEnd: async (epoch, logs) => {
             valAcc = logs.val_acc;
-            if (onIteration) {
-            onIteration('onEpochEnd', epoch, logs);
-            }
             await tf.nextFrame();
         }
         }
