@@ -8,6 +8,7 @@ var guess = document.getElementById("guess");
 var tImages = [];
 var database = firebase.database();
 const resolution = 28;
+var net;
 var trainedNet;
 
 function setup(){
@@ -31,7 +32,7 @@ function getTrainingData(){
 }
 
 function makeTrainedNet(){
-	var net = new brain.NeuralNetwork();
+	net = new brain.NeuralNetwork();
     net.train([new t(new color(1, 0, 0), 0), new t(new color(0, 1, 0), 0.5), new t(new color(0, 0, 1), 1), new t(new color(1, 0, 0), 0), new t(new color(0, 1, 0), 0.5), new t(new color(0, 0, 1), 1), new t(new color(1, 0, 0), 0), new t(new color(0, 1, 0), 0.5), new t(new color(0, 0, 1), 1)]);
   trainedNet = net.toFunction();
     console.log("Trained");
