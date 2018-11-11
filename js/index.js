@@ -14,7 +14,7 @@ var logEnabled = false;
 var net;
 var trainData;
 var testData;
-console.log("To build a neural net type the command newNet() into this console");
+console.log("To build a neural net type the command gets() and then the command newNet() into this console");
 
 function setup(){
   canvas = createCanvas(600, 600);
@@ -32,9 +32,9 @@ function setup(){
   }
 }
 
-function newNet(){
-  makeNet();
-  trainNet(net);
+async function newNet(){
+  await makeNet();
+  await trainNet(net);
 }
 
 function drawSave(save){

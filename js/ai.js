@@ -1,4 +1,4 @@
-function makeNet(){
+async function makeNet(){
     const model = tf.sequential();
     model.add(tf.layers.conv2d({
       inputShape: [resolution, resolution, 1],
@@ -16,8 +16,7 @@ function makeNet(){
     net = model;
 }
 
-function prepareData(){
-    gets();
+async function prepareData(){
     testData = toDataFormat(Array.from(testData));
     trainData = toDataFormat(Array.from(tData));
 }
@@ -27,17 +26,20 @@ function Data(){
     this.labels = [];
 }
 
-function toDataFormat(data){
+async function toDataFormat(data){
     var d = new Data();
     for(var i = 0; i < data.length; i ++){
         d.xs[d.xs.length] = toTensor(data[i].input);
         d.labels[d.labels.length] = data[i].output;
     }
+    d.xs = tf.tensor(d.xs);
     return d;
 }
 
-function toTensor(data){
-    return tf.tensor(data);
+async function toTensor(data){
+    let _d = data.flat();
+    console.log(_d);
+    return tf.tensor(_d, [resolution, resolution], 'bool');
 }
   
 async function trainNet(model){
