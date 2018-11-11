@@ -34,7 +34,8 @@ function makeTrainedNet(){
 	var net = new brain.NeuralNetwork();
     net.train([new t(new color(1, 0, 0), 0), new t(new color(0, 1, 0), 0.5), new t(new color(0, 0, 1), 1), new t(new color(1, 0, 0), 0), new t(new color(0, 1, 0), 0.5), new t(new color(0, 0, 1), 1), new t(new color(1, 0, 0), 0), new t(new color(0, 1, 0), 0.5), new t(new color(0, 0, 1), 1)]);
   trainedNet = net.toFunction();
-  console.log("Trained");
+    console.log("Trained");
+    return net.toFunction();
 }
 
 function color(r, g, b) {
