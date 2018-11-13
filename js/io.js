@@ -6,7 +6,10 @@ function keyPressed(){
 		trains();
 	}
 	if(key === 's'){
-		saves();
+		if(tImages.length > 0) saves();
+	}
+	if(key === 'g'){
+		gets();
 	}
 }
 
