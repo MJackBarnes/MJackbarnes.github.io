@@ -4,6 +4,7 @@ async function makeNet(){
     const model = tf.sequential();
     model.add(tf.layers.conv2d({
       inputShape: [resolution, resolution, 1],
+      shape: [resolution, resolution,1],
       kernelSize: 3,
       filters: 16,
       activation: 'relu'
