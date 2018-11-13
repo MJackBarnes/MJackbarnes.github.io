@@ -43,7 +43,7 @@ async function toDataFormat(data){
 async function toTensor(data){
     let _d = data.flat();
     console.log(_d);
-    return tf.tensor(_d, [resolution, resolution], 'bool');
+    return new tf.tensor(_d, [resolution, resolution], 'bool');
 }
   
 async function trainNet(model){
