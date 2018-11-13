@@ -4,6 +4,7 @@ async function makeNet(){
     const model = tf.sequential();
     model.add(tf.layers.conv2d({
       inputShape: [resolution, resolution, 1],
+      shape: [resolution, resolution,1],
       kernelSize: 3,
       filters: 16,
       activation: 'relu'
@@ -43,7 +44,8 @@ async function toDataFormat(data){
 async function toTensor(data){
     let _d = data.flat();
     console.log(_d);
-    return tf.tensor(_d, [resolution, resolution], 'bool');
+    let d = tf.tensor(_d, [resolution, resolution], 'bool')
+    return d.shape = [resolution, resolution] ;
 }
   
 async function trainNet(model){
