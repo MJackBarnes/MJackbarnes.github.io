@@ -2,25 +2,12 @@
 //Makes the neural network object
 async function makeNet(){
     const model = tf.sequential();
-    model.add(tf.layers.conv2d({
-      inputShape: [resolution, resolution, 1],
-      shape: [resolution, resolution,1],
-      kernelSize: 3,
-      filters: 16,
-      activation: 'relu'
-    }));
-    model.add(tf.layers.maxPooling2d({poolSize: 2, strides: 2}));
-    model.add(tf.layers.conv2d({kernelSize: 3, filters: 32, activation: 'relu'}));
-    model.add(tf.layers.maxPooling2d({poolSize: 2, strides: 2}));
-    model.add(tf.layers.conv2d({kernelSize: 3, filters: 32, activation: 'relu'}));
-    model.add(tf.layers.flatten({}));
-    model.add(tf.layers.dense({units: 64, activation: 'relu'}));
-    model.add(tf.layers.dense({units: 10, activation: 'softmax'}));
+    model.add(tf.layers.dense({units: 32, 
     net = model;
 }
 
 //prepares data for use in the trainig of network net
-async function prepareData(){
+function prepareData(){
     testData = toDataFormat(Array.from(testData));
     trainData = toDataFormat(Array.from(tData));
 }
@@ -31,7 +18,7 @@ function Data(){
     this.labels = [];
 }
 
-async function toDataFormat(data){
+function toDataFormat(data){
     var d = new Data();
     for(var i = 0; i < data.length; i ++){
         d.xs[d.xs.length] = toTensor(data[i].input);
@@ -41,7 +28,7 @@ async function toDataFormat(data){
     return d;
 }
 
-async function toTensor(data){
+function toTensor(data){
     let _d = data.flat();
     console.log(_d);
     let d = tf.tensor(_d, [resolution, resolution], 'bool')
