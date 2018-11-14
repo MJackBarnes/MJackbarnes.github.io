@@ -1,6 +1,7 @@
 
 //Makes the neural network object
-async function makeNet(){
+function makeNet(){
+    gets()
     const model = tf.sequential();
     model.add(tf.layers.conv2d({
       inputShape: [resolution, resolution, 1],
@@ -20,7 +21,7 @@ async function makeNet(){
 }
 
 //prepares data for use in the trainig of network net
-async function prepareData(){
+function prepareData(){
     testData = toDataFormat(Array.from(testData));
     trainData = toDataFormat(Array.from(tData));
 }
@@ -31,7 +32,7 @@ function Data(){
     this.labels = [];
 }
 
-async function toDataFormat(data){
+function toDataFormat(data){
     var d = new Data();
     for(var i = 0; i < data.length; i ++){
         d.xs[d.xs.length] = toTensor(data[i].input);
@@ -41,7 +42,7 @@ async function toDataFormat(data){
     return d;
 }
 
-async function toTensor(data){
+function toTensor(data){
     let _d = data.flat();
     console.log(_d);
     let d = tf.tensor(_d, [resolution, resolution], 'bool')
