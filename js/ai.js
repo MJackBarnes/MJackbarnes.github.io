@@ -38,7 +38,7 @@ function toDataFormat(data){
         d.xs[d.xs.length] = toTensor(data[i].input);
         d.labels[d.labels.length] = data[i].output;
     }
-    d.xs = tf.tensor(d.xs, [d.xs.length, 1]);
+    d.xs = tf.tensor(d.xs, [d.xs.length, 2]);
     return d;
 }
 
